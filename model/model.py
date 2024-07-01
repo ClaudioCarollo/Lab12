@@ -54,28 +54,33 @@ class Model:
         # inizializzo il parziale con il nodo iniziale
         parziale = []
         for a in self.grafo.nodes:
-            if a not in parziale and len(parziale)-1 < N:
-                parziale.append(a)
-                self._ricorsionev2(parziale, N)
-                parziale.pop()  # rimuovo l'ultimo elemento aggiunto: backtracking
+            parziale.append(a)
+            self._ricorsionev2(parziale, N)
+            parziale.pop()  # rimuovo l'ultimo elemento aggiunto: backtracking
         return self._bestComp, self._bestdTot
 
     def _ricorsionev2(self, parziale, N):
         # verifico se soluzione è migliore di quella salvata in cache
         if len(parziale) == N:
-            if self.grafo.has_edge(parziale[-1],parziale[0]):
+            if self.grafo.has_edge(parziale[-1], parziale[0]):
                 parziale.append(parziale[0])
-            if self._getScore(parziale) > self._bestdTot:
-                # se lo è aggiorno i valori migliori
-                self._bestComp = copy.deepcopy(parziale)
-                self._bestdTot = self._getScore(parziale)
+                if self._getScore(parziale) > self._bestdTot:
+                    # se lo è aggiorno i valori migliori
+                    self._bestComp = copy.deepcopy(parziale)
+                    self._bestdTot = self._getScore(parziale)
+                    return
+                else:
+                    return
+            else:
+                return
         # verifico se posso aggiungere un altro elemento
-        comp = nx.node_connected_component(self.grafo, parziale[-1])
-        for a in comp:
-            if a not in parziale and len(parziale)-1 < N:
-                parziale.append(a)
-                self._ricorsionev2(parziale, N)
-                parziale.pop()  # rimuovo l'ultimo elemento aggiunto: backtracking
+
+        for a in self.grafo.neighbors(parziale[-1]):
+            if a not in parziale:
+                if len(parziale) - 1 <= N:
+                    parziale.append(a)
+                    self._ricorsionev2(parziale, N)
+                    parziale.pop()  # rimuovo l'ultimo elemento aggiunto: backtracking
 
     def _getScore(self, listOfNodes):
         score = 0

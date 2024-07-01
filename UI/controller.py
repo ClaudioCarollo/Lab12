@@ -65,18 +65,18 @@ class Controller:
             try:
                 soglia = int(soglia)
             except ValueError:
-                self._view.txt_result.controls.append(ft.Text("Inserisci una soglia intera!", color='red'))
+                self._view.txtOut3.controls.append(ft.Text("Inserisci una soglia intera!", color='red'))
                 self._view.update_page()
 
             if soglia < 2:
-                self._view.txt_result.controls.append(ft.Text("Inserisci una soglia del valore di almeno 2", color='red'))
+                self._view.txtOut3.controls.append(ft.Text("Inserisci una soglia del valore di almeno 2", color='red'))
                 self._view.update_page()
             else:
                 percorso = self._model.getPath(soglia)
-                self._view.txt_result.controls.append(
+                self._view.txtOut3.controls.append(
                     ft.Text(f"La somma totale dei pesi degli archi per il cammino trovato è: {percorso[1]}"))
                 self._view.update_page()
                 for i in range(0, len(percorso[0])-1):
-                    self._view.txt_result.controls.append(
+                    self._view.txtOut3.controls.append(
                         ft.Text(f"{percorso[0][i].Retailer_name} -> {percorso[0][i+1].Retailer_name}: {self._model.grafo[percorso[0][i]][percorso[0][i+1]]["weight"]}"))
                     self._view.update_page()
